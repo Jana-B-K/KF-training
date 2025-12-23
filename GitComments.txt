@@ -1,0 +1,149 @@
+
+GIT CONFIGURATION (FIRST TIME)
+
+git config --global user.name "Your Name"
+git config --global user.email "you@email.com"
+
+- Tells Git who you are
+- Used when creating commits
+- Mandatory (Git won’t allow commit without this)
+
+Stored in:
+~/.gitconfig
+
+Check configuration:
+git config --list
+
+
+CREATE / GET A REPOSITORY
+
+git init
+- Creates a local Git repository
+- Adds a hidden .git folder
+- Repository is stored locally
+
+git clone <repo-url>
+- Copies a remote repository (GitHub) to local system
+
+Check repo:
+ls -a
+- You will see .git folder
+
+
+CHECK STATUS
+
+git status
+- Shows modified files
+- Shows staged files
+- Shows untracked files
+
+
+STAGING (ADD FILES)
+
+git add file.txt
+- Add single file to staging area
+
+git add .
+- Add all changed files to staging area
+
+
+UNSTAGE FILES (VERY IMPORTANT)
+
+git restore --staged file.txt
+- Removes file from staging area
+- File remains safe in working directory
+
+Unstage ALL files:
+git restore --staged .
+- Use this if you ran git add . by mistake
+
+
+COMMIT CHANGES
+
+git commit -m "your message"
+- Saves staged changes permanently
+- Message should explain the change
+
+Example:
+git commit -m "Added login validation"
+
+
+VIEW COMMIT HISTORY
+
+git log
+- Full commit history
+
+git log --oneline
+- Short and clean history 
+
+SEE CHANGES
+
+git diff
+- Shows unstaged changes
+
+git diff --staged
+- Shows staged changes
+
+
+REMOVE / DISCARD CHANGES
+
+git restore file.txt
+- Discard local changes (go back to last commit)
+
+git rm file.txt
+- Delete file and stage the deletion
+
+
+BRANCHING
+
+git branch
+- List branches
+
+git branch feature
+- Create new branch
+
+git checkout feature
+- Switch branch
+
+git checkout -b feature
+- Create and switch branch
+
+git merge feature
+- Merge feature branch into current branch
+
+
+REMOTE REPOSITORY (GITHUB)
+
+git remote add origin <repo-url>
+- Connect local repo to GitHub
+
+git remote -v
+- Check remote URL
+
+git push origin main
+- Push code to GitHub
+
+git pull
+- Pull latest changes from remote
+
+
+UNDO COMMITS (BASIC)
+
+git reset --soft HEAD~1
+- Undo last commit
+- Code is kept
+
+git reset --hard HEAD~1
+- Undo last commit
+- Code is deleted (dangerous)
+
+
+STASH (TEMPORARY SAVE)
+
+git stash
+- Temporarily save uncommitted changes
+
+git stash pop
+- Restore saved changes
+
+

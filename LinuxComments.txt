@@ -1,0 +1,202 @@
+
+FILE & FOLDER NAVIGATION
+
+ls
+- List files and folders in current directory
+
+pwd
+- Show full path of current directory
+
+cd foldername
+- Change directory
+
+cd ..
+- Go back one level
+
+cd ~
+- Go to home directory
+
+locate filename
+- Search file anywhere in system (fast, uses database)
+
+find . -name filename
+- Find file inside current directory
+
+
+FILE & FOLDER OPERATIONS
+
+mkdir foldername
+- Create a folder
+
+mkdir -p java/backend
+- Create nested folders
+
+rmdir foldername
+- Remove empty folder
+
+rm file.txt
+- Delete a file
+
+rm -r foldername
+- Delete folder with content
+
+touch file.txt
+- Create empty file
+
+cp a.txt b.txt
+- Copy file
+
+cp -r src backup
+- Copy folder
+
+mv old.txt new.txt
+- Rename file
+
+mv file.txt Downloads/
+- Move file
+
+
+FILE INFORMATION & VIEWING
+
+file image.png
+- Check file type
+
+cat file.txt
+- Show full file content
+
+head file.txt
+- Show first 10 lines
+
+head -n 5 file.txt
+- Show first 5 lines
+
+tail file.txt
+- Show last 10 lines
+
+tail -f log.txt
+- Live log monitoring
+
+
+TEXT EDITORS
+
+nano file.txt
+- Save: CTRL+O
+- Exit: CTRL+X
+
+vi file.txt
+- Insert mode: i
+- Save & exit: :wq
+- Exit without save: :q!
+
+
+SEARCH & MODIFY
+
+grep "error" log.txt
+- Search text in file
+
+grep -i "error" log.txt
+- Case-insensitive search
+
+sed 's/java/python/' file.txt
+- Replace first occurrence (preview)
+
+sed -i 's/java/python/g' file.txt
+- Replace and save changes
+
+awk '{print $1}' file.txt
+- Print 1st column
+
+awk '$2 > 50 {print $1}' file.txt
+- Print 1st column where 2nd column > 50
+
+
+FILE PROCESSING
+
+sort names.txt
+- Sort file content
+
+sort -r names.txt
+- Reverse sort
+
+
+CUT (EXTRACT COLUMNS)
+
+cut -d',' -f1 data.csv
+- Extract column using delimiter
+
+cut -c1-5 file.txt
+- Extract characters by position
+
+
+COMPARE & OUTPUT
+
+diff file.txt file1.txt
+- Compare two files
+
+echo "Hello World"
+- Print text
+
+echo "Hi Jana" > msg.txt
+- Write text to file
+
+
+ALIAS
+
+alias ll='ls -l'
+- Create shortcut
+
+unalias ll
+- Remove shortcut
+
+
+COMPRESSION
+
+zip files.zip a.txt b.txt
+- Compress files
+
+unzip files.zip
+- Extract zip
+
+
+PACKAGE MANAGER (UBUNTU)
+
+sudo apt update
+- Refresh software list
+
+sudo apt install git
+- Install git
+
+git --version
+- Check git version
+
+
+SYSTEM MONITORING
+
+df -h
+- Disk usage
+
+du -sh logs/
+- Folder size
+
+top
+- Live process monitoring
+
+uname -a
+- System information
+
+
+NETWORKING COMMANDS
+
+hostname
+- Show system name
+
+ping google.com
+- Check internet / server
+
+wget <url>
+- Download file
+
+curl <url>
+- API testing / data transfer
+
+
