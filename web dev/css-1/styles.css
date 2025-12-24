@@ -1,0 +1,63 @@
+.red{
+    color: red;
+    font-size: large;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.yellow{
+    color: yellow;
+    font-size: 40px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+p{
+    background-color: aqua;
+    font-size: 25px;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+#list{
+    align-items: center;
+    background-color: bisque;
+}
+
+.box1,.box2,.box3,.box4{
+    height: 200px;
+    width: 200px;
+}
+.box1{
+    background-color: gray;
+    position: relative;
+    left: 200px;
+}
+
+.box2{
+    background-color: green;
+    position: relative;
+    left: 300px;
+}
+
+.box3{
+    background-color: pink;
+    position: fixed;
+    top: 0;
+    right: 0;
+}
+
+.box4{
+    background-color: orange;
+    
+    position: absolute;
+    top: 100px;
+    left: 100px;
+}
+
+.innerbox1{
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    height: 100px;
+    width: 100px;
+    background-color: brown;
+
+}
