@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hands - On</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+    <header>
+        <nav class="nav navbar navbar-expand-lg fixed-top ">
+            <div class="container-fluid">
+
+                <!-- Toggle button (mobile) -->
+                <button class="navbar-toggler " type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav"
+                    aria-controls="navbarNav"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Centered menu -->
+                <div class="collapse navbar-collapse justify-content-center text-center" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link " href="#evenodd">Even / Odd</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#largest">Find Largest</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#factorial">Factorial</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#countdowntimer">Timer</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#reverse">String Reverse</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#multiplicationtable">Multiplication</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#prime">Prime / Composite</a></li>
+                        <li class="nav-item"><a class="nav-link" href="form.html">Form</a></li>
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+    </header>
+
+
+
+    <!-- odd even -->
+    <div id="evenodd"  class="box">
+        <div class="content-box container  ">
+            <div class="row">
+                <h1>Check Even or Odd</h1>
+                <form id="evenoddbtn" action="">
+                    <input  id="input1" class="form-control my-2" placeholder="Enter number" type="text">
+                    <button type="submit"  class="btn btn-danger w-100 my-2">check</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- largest of number -->
+    <div id="largest" class="box">
+        <div  class="content-box container ">
+            <div class="row">
+                <h1>Largest of number</h1>
+                <form id="largestbtn" action="">
+                    <input id="input2" class="form-control my-2" placeholder="Enter numbers" type="text">
+                    <button type="submit"  class="btn btn-danger w-100 my-2">check</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+<!-- factorial of number -->
+    <div id="factorial" class="box">
+        <div  class="content-box  container ">
+            <div class="row">
+                <h1>Factorial of number</h1>
+                <form id="factorialbtn" action="">
+                    <input id="input3" class="form-control my-2" placeholder="Enter number" type="text">
+                    <button type="submit"  class="btn btn-danger w-100 my-2">check</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Countdown timer -->
+ 
+
+    <div id="countdowntimer" class="box">
+        <div  class="content-box container ">
+            <div class="row">
+                <h1>Count timer</h1>
+                  <form id="startTimer">
+                    <input id="input4" class="form-control my-3" placeholder="Enter start time" type="text">
+
+                    <p id="remaining-timer">0</p>
+
+                    <button type="submit" class="btn btn-danger w-100 my-2">
+                        Start
+                    </button>
+                    </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Reverse a string -->
+    <div id="reverse" class="box">
+        <div  class="content-box container ">
+            <div class="row">
+                <h1>Reverse astring</h1>
+                <form id="reversebtn" action="">
+                    <input id="input5" class="form-control my-2" placeholder="Enter String" type="text">
+                    <button type="submit" class="btn btn-danger w-100 my-2">check</button>
+ 
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Multiplication table -->
+    <div id="multiplicationtable" class="box">
+        <div  class="content-box container ">
+            <div class="row">
+                <h1>Multiplication table</h1>
+                <form id="multiplebtn" action="">
+                    <input id="input6" class="form-control my-2" placeholder="Enter number" type="text">
+                    <div id="multiplication-ans"></div>
+                    <button type="submit"  class="btn btn-danger w-100 my-2">show</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+<!-- Prime -->
+    <div id="prime" class="box">
+        <div  class="content-box container ">
+            <div class="row">
+                <h1>Prime or composite</h1>
+                <form id="primebtn" action="">
+                    <input id="input7"  class="form-control my-2" placeholder="Enter number" type="text">
+                    <button type="submit"  class="btn btn-danger w-100 my-2 ">check</button>
+   
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script>
+        const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+        const menuToggle = document.getElementById('navbarNav');
+        const bsCollapse = new bootstrap.Collapse(menuToggle, { toggle: false });
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+            bsCollapse.hide();
+            });
+        });
+    </script>
+    <script src="index.js"></script>
+
+
+</body>
+</html>
