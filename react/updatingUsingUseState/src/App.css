@@ -1,0 +1,82 @@
+/* Page */
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: #f4f6f8;
+  padding: 20px;
+}
+
+/* Title */
+h1 {
+  text-align: center;
+  color: #1f2937;
+}
+
+/* Form section */
+.form-group {
+  max-width: 400px;
+  margin: 20px auto;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+label {
+  font-weight: 600;
+  color: #374151;
+}
+
+input {
+  width: 95%;
+  padding: 8px 10px;
+  margin: 6px 0 14px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+}
+
+input:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+/* Button */
+button {
+  width: 100%;
+  padding: 10px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #1e40af;
+}
+
+/* Car list */
+ul {
+  max-width: 500px;
+  margin: 30px auto;
+  padding: 0;
+  list-style: none;
+}
+
+li {
+  background: #ffffff;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s, background 0.2s;
+}
+
+li:hover {
+  background: #fee2e2;
+  transform: scale(1.02);
+}
