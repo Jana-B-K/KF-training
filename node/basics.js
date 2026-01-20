@@ -93,4 +93,4 @@ async function parallel() {
     operation2()
   ]);
   return [result1, result2];
-}
+}  
