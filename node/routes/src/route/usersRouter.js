@@ -1,31 +1,11 @@
 import { Router } from 'express';
 import {query, validationResult, matchedData, checkSchema} from 'express-validator'
-import { createValidationSchema } from '../utils/createValidationSchema.js'
+import { createValidationSchema, filterValidationSchema } from '../utils/validationSchema.js'
 import {getUserById} from '../utils/middlewares.js'
-import users  from '../utils/constants.js'
+import {users}  from '../utils/constants.js'
 const router = Router();
 
-router.get(
-    '/api/users',
-    [
-        query("key")
-            .optional() // Make it optional since filtering is optional
-            .isString()
-            .withMessage("Key must be a string")
-            .notEmpty()
-            .withMessage("Key must not be empty")
-            .isLength({ min: 3, max: 10})
-            .withMessage("Key must be 3-10 characters"),
-        query("value")
-            .optional() // Make it optional
-            .isString()
-            .withMessage("Value must be a string")
-            .notEmpty()
-            .withMessage("Value must not be empty")
-            .isLength({ min: 1, max: 50})
-            .withMessage("Value must be 1-50 characters")
-    ],
-    (req, res) => {
+router.get('/api/users', checkSchema(filterValidationSchema), (req, res) => {
         const result = validationResult(req);
         
         // Check if validation failed
