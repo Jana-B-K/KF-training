@@ -1,10 +1,10 @@
 export const users = [
-    {id: 1, name: 'Jana', age: 22},
-    {id: 2, name: 'Nayeem', age: 20},
-    {id: 3, name: 'Nirmal', age: 23},
-    {id: 4, name: 'sathish', age: 22},
-    {id: 5, name: 'Nishan', age: 21},
-    {id: 6, name: 'Girish', age: 24},
+    {id: 1, name: 'Jana', age: 22, password: "1234"},
+    {id: 2, name: 'Nayeem', age: 20, password: "2341"},
+    {id: 3, name: 'Nirmal', age: 23, password: "1122"},
+    {id: 4, name: 'sathish', age: 22, password: "2233"},
+    {id: 5, name: 'Nishan', age: 21, password: "12314"},
+    {id: 6, name: 'Girish', age: 24, password: "123412"},
   
 ]
 export const products = [

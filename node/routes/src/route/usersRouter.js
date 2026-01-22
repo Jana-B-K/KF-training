@@ -6,7 +6,10 @@ import {users}  from '../utils/constants.js'
 const router = Router();
 
 router.get('/api/users', checkSchema(filterValidationSchema), (req, res) => {
-        const result = validationResult(req);
+    // req.session.user='jana'
+    // //console.log(req.session)
+    // console.log('Session ID:', req.sessionID);
+    //     const result = validationResult(req);
         
         // Check if validation failed
         if (!result.isEmpty()) {
