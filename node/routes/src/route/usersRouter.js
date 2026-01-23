@@ -1,89 +1,123 @@
 import { Router } from 'express';
-import {query, validationResult, matchedData, checkSchema} from 'express-validator'
-import { createValidationSchema, filterValidationSchema } from '../utils/validationSchema.js'
-import {getUserById} from '../utils/middlewares.js'
-import {users}  from '../utils/constants.js'
+import { validationResult, matchedData, checkSchema } from 'express-validator';
+import { createValidationSchema, filterValidationSchema } from '../utils/validationSchema.js';
+import { getUserById, requireAuth } from '../utils/middlewares.js';
+import { users } from '../utils/constants.js';
+import { User } from '../mongoose/schemas/user.js';
+import { hashPassword } from '../utils/helper.js';
+
 const router = Router();
 
-router.get('/api/users', checkSchema(filterValidationSchema), (req, res) => {
-    // req.session.user='jana'
-    // //console.log(req.session)
-    // console.log('Session ID:', req.sessionID);
-    //     const result = validationResult(req);
-        
-        // Check if validation failed
-        if (!result.isEmpty()) {
-            return res.status(400).send({ errors: result.array() });
-        }
-        
-        const { key, value } = req.query;
-        
-        if (key && value) {
-            // Check if the key exists in user objects
-            if (users.length > 0 && !(key in users[0])) {
-                return res.status(400).send({ 
-                    msg: `Invalid key: ${key}. Valid keys are: ${Object.keys(users[0]).join(', ')}` 
-                });
-            }
-            
-            const filteredUsers = users.filter((user) => {
-                const userValue = user[key];
-                // Handle both string and number fields safely
-                return userValue && userValue.toString().toLowerCase().includes(value.toLowerCase());
-            });
-            
-            return res.send(filteredUsers);
-        }
-        
-        res.send(users);
-    }
-);
-
-router.get('/api/user/:id', (req, res) => {
-    const id = parseInt(req.params.id);
-    if(isNaN(id)){
-        return res.status(404).send({msg: "User NOT FOUND"})
-    }
-    const user = users.find((user) => user.id === id);
-    if(user){
-        return res.send(user);
-    }
-    res.status(404).send({msg: "User not found"})
-})
-
-router.post('/api/users', checkSchema(createValidationSchema), (req, res) => {
+// Public route - Create new user (registration)
+router.post('/api/users', checkSchema(createValidationSchema), async (req, res) => {
     const result = validationResult(req);
+    if (!result.isEmpty()) {
+        return res.status(400).send({ errors: result.array() });
+    }
+
+    const data = matchedData(req);
+    data.password = hashPassword(data.password);
+
+    try {
+        const savedUser = await User.create(data);
+        const userResponse = await User.findById(savedUser._id).select('-password');
+        res.status(201).send(userResponse);
+    } catch (err) {
+        if (err.code === 11000) {
+            return res.status(400).send({ msg: "Username already exists" });
+        }
+        res.status(400).send({ msg: "Error creating user" });
+    }
+});
+
+// Apply authentication middleware to all routes below this line
+router.use(requireAuth);
+
+// Protected routes - all require authentication
+
+// Get all users
+router.get('/api/users', async (req, res) => {
+    const { username, age } = req.query;
     
+    try {
+        let query = {};
+        
+        if (username) query.username = username;  // Exact match
+        if (age) query.age = parseInt(age);       // Exact match
+        
+        const foundUsers = await User.find(query).select('-password');
+        res.send(foundUsers);
+    } catch (err) {
+        res.status(500).send({ msg: "Error fetching users" });
+    }
+});
+
+// Get user by ID
+router.get('/api/user/:id', async (req, res) => {
+    const id = req.params.id;
+    try {
+        const findUser = await User.findById(id).select('-password');
+        if (!findUser) {
+            return res.status(404).send({ msg: "User not found" });
+        }
+        res.send(findUser);
+    } catch (err) {
+        console.log(err);
+        res.status(400).send({ msg: "Invalid user ID" });
+    }
+});
+
+// Update user
+router.put('/api/user/:id', checkSchema(createValidationSchema), async (req, res) => {
+    const result = validationResult(req);
     if (!result.isEmpty()) {
         return res.status(400).send({ errors: result.array() });
     }
     
+    const id = req.params.id;
     const data = matchedData(req);
-    const nextId = users.length > 0 ? users[users.length - 1].id + 1 : 1;
-    const newUser = {id: nextId, ...data};
-    users.push(newUser);
     
-    return res.status(201).send(newUser);
-})
-
-router.put('/api/user/:id',getUserById, checkSchema(createValidationSchema), (req, res) => {
-    const result = validationResult(req)
-    if(!result.isEmpty()){
-        return res.status(404).send({ error: result.array() })
+    if (data.password) {
+        data.password = hashPassword(data.password);
     }
-    const id = parseInt(req.params.id);
-    const data = matchedData(req);
-    console.log(data)
-    const {userIndex} = req;
     
-    users[userIndex] = {id: id, ...data};
-    return res.status(201).send({msg: "User updated"})
-})
+    try {
+        const updatedUser = await User.findByIdAndUpdate(
+            id,
+            data,
+            { new: true, runValidators: true }
+        ).select('-password');
+        
+        if (!updatedUser) {
+            return res.status(404).send({ msg: "User not found" });
+        }
+        
+        return res.status(200).send({ msg: "User updated", user: updatedUser });
+    } catch (err) {
+        console.log(err);
+        if (err.code === 11000) {
+            return res.status(400).send({ msg: "Username already exists" });
+        }
+        return res.status(400).send({ msg: "Error updating user" });
+    }
+});
 
-router.delete('/api/user/:id', getUserById, (req, res) => {
-    const { userIndex } = req;
-    users.splice(userIndex,1);
-    res.send({msg: "User deleted sucessfully"})
-})
+// Delete user
+router.delete('/api/user/:id', async (req, res) => {
+    const id = req.params.id;
+    
+    try {
+        const deletedUser = await User.findByIdAndDelete(id);
+        
+        if (!deletedUser) {
+            return res.status(404).send({ msg: "User not found" });
+        }
+        
+        res.send({ msg: "User deleted successfully" });
+    } catch (err) {
+        console.log(err);
+        res.status(400).send({ msg: "Error deleting user" });
+    }
+});
 
 export default router;

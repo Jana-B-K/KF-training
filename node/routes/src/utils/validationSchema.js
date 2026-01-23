@@ -1,27 +1,45 @@
 export const createValidationSchema = {
-    name: {
-        notEmpty: {
-            errorMessage: "User name should not be empty"
-        },
-        isLength: {
-            options: { min: 3, max: 8 },
-            errorMessage: "Name should be between 3 to 8 characters"
-        },
-        isString: {
-            errorMessage: "Name should be a string"
-        }
+  username: {
+    in: ['body'],
+    notEmpty: {
+      errorMessage: "Username is required"
     },
-   age: {
-        notEmpty: {
-            errorMessage: "Age is required"
-        },
-        isInt: {
-            options: { min: 18, max: 120 },
-            errorMessage: "Age must be between 18 and 120"
-        },
-        toInt: true
+    isString: {
+      errorMessage: "Username must be a string"
+    },
+    isLength: {
+      options: { min: 3, max: 50 },
+      errorMessage: "Username must be between 3 and 50 characters"
+    },
+    trim: true
+  },
+
+  age: {
+    in: ['body'],
+    notEmpty: {
+      errorMessage: "Age is required"
+    },
+    isInt: {
+      options: { min: 18, max: 120 },
+      errorMessage: "Age must be between 18 and 120"
+    },
+    toInt: true
+  },
+
+  password: {
+    in: ['body'],
+    notEmpty: {
+      errorMessage: "Password is required"
+    },
+    isString: {
+      errorMessage: "Password must be a string"
+    },
+    isLength: {
+      options: { min: 4, max: 50 },
+      errorMessage: "Password must be between 4 and 50 characters"
     }
-}
+  }
+};
 
 
 export const filterValidationSchema = {
@@ -50,13 +68,15 @@ export const filterValidationSchema = {
         in: ['query']
     }
 }
+
 export const createProductValidationSchema = {
     name:{
+        in: ['body'],
         notEmpty: {
             errorMessage: "Product name should not empty"
         },
         isString: {
-            errorMessage: 'product name should be a string'
+            errorMessage: 'Product name should be a string'
         },
         isLength: {
             options: { min: 3},
@@ -64,20 +84,21 @@ export const createProductValidationSchema = {
         }
     },
     price: {
+        in: ['body'],
         notEmpty: {
-            errorMessage: "price should not empty"
+            errorMessage: "Price should not empty"
         },
-        isInt: {
+        isFloat: {
             options: { min: 1000},
-            errorMessage: "price must be above 1000"
+            errorMessage: "Price must be above 1000"
         },
-        toFloat: true,
-
+        toFloat: true
     }
 }
 
 export const productFilterValidationSchema = {
     filter:{
+        in: ['query'],
         notEmpty: {
             errorMessage: "Filter should not empty"
         },
@@ -90,14 +111,12 @@ export const productFilterValidationSchema = {
         }
     },
     value: {
+        in: ['query'],
         notEmpty: {
-            errorMessage: "price should not empty"
+            errorMessage: "Value should not empty"
         },
-        isInt: {
-            options: { min: 1000, max: 5000 },
-            errorMessage: "price must be between 1000 - 5000"
-        },
-        toFloat: true,
-
+        isString: {
+            errorMessage: "Value must be a string"
+        }
     }
 }
