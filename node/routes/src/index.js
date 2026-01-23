@@ -29,6 +29,17 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session())
+
+
+// Login route - authenticates user and creates session
+app.post(
+  '/api/auth',
+  passport.authenticate('local'),
+  (req, res) => {
+    res.send({ msg: "Authenticated successfully", user: { username: req.user.username, age: req.user.age } });
+  }
+);
+
 app.use(userRouter)
 app.use(productRouter)
 
@@ -41,14 +52,7 @@ app.get('/', (req, res) => {
    res.send("Hello");
 })
 
-// Login route - authenticates user and creates session
-app.post(
-  '/api/auth',
-  passport.authenticate('local'),
-  (req, res) => {
-    res.send({ msg: "Authenticated successfully", user: { username: req.user.username, age: req.user.age } });
-  }
-);
+
 
 // Check authentication status
 app.get('/api/auth/status', (req, res) => {
