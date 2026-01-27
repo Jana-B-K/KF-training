@@ -23,7 +23,10 @@ router.post('/api/users', checkSchema(createValidationSchema), async (req, res) 
         const userResponse = await User.findById(savedUser._id).select('-password');
         res.status(201).send(userResponse);
     } catch (err) {
+        
+        console.log(err)
         if (err.code === 11000) {
+            return res.send( await User.findOne(data))
             return res.status(400).send({ msg: "Username already exists" });
         }
         res.status(400).send({ msg: "Error creating user" });
@@ -31,13 +34,18 @@ router.post('/api/users', checkSchema(createValidationSchema), async (req, res) 
 });
 
 // Apply authentication middleware to all routes below this line
-router.use(requireAuth);
+// router.use(requireAuth);
 
 // Protected routes - all require authentication
 
 // Get all users
-router.get('/api/users', async (req, res) => {
-    const { username, age } = req.query;
+router.get('/api/users', checkSchema(filterValidationSchema), async (req, res) => {
+
+    const result = validation(req);
+    if(!result.isEmpty()){
+        return res.status(400).send({ errors : result.array() })
+    }
+    const { username, age } = matchedData(req);
     
     try {
         let query = {};

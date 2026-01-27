@@ -14,3 +14,15 @@ export const products = [
     {id: 4, name: 'Watch', price: 4000},
     {id: 5, name: 'Headphones', price: 3000}
 ]
+
+// app.use(session({
+//    secret: "this is secret",
+//    saveUninitialized: false,
+//    resave: false,
+//    cookie: {
+//       maxAge: 60000 * 60, // 1 hour
+//    },
+//    store: MongoStore.create({
+//       client: mongoose.connection.getClient()
+//    })
+// }))

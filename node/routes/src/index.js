@@ -1,86 +1,100 @@
-import express from 'express'
-import userRouter from './route/usersRouter.js'
-import productRouter from './route/productRouter.js'
-import cookieParser from 'cookie-parser';
-import session from 'express-session'
-import passport from 'passport';
-import '../src/strategies/local-strategy.js'
-import mongoose from 'mongoose';
+import express from "express";
+import cookieParser from "cookie-parser";
+import session from "express-session";
+import passport from "passport";
+import mongoose from "mongoose";
+import MongoStore from "connect-mongo";
+
+import userRouter from "./route/usersRouter.js";
+import productRouter from "./route/productRouter.js";
+
+import "./config/passport.js";
+import "./strategies/local-strategy.js";
+import "./strategies/discord-strategy.js";
+import "./strategies/google-strategy.js";
 
 const app = express();
+const PORT = 4040;
+console.log("🔥 INDEX FILE LOADED");
 
+
+
+
+// ---- MongoDB ----
 mongoose
-   .connect("mongodb+srv://janakumar9843_db_user:1234@cluster0.xspdewz.mongodb.net/?appName=Cluster0")
-   .then(() => console.log("Connected to database"))
-   .catch((err) => console.log(`Error: ${err}`))
+  .connect(
+    "mongodb+srv://janakumar9843_db_user:1234@cluster0.xspdewz.mongodb.net/?appName=Cluster0"
+  )
+  .then(() => console.log("Connected to database"))
+  .catch(console.error);
 
-const PORT = 2000;
-
+// ---- Middleware ----
 app.use(express.json());
-app.use(cookieParser("This is secret"))
-app.use(session({
-   secret: "this is secret",
-   saveUninitialized: false,
-   resave: false,
-   cookie: {
-      maxAge: 60000 * 60, // 1 hour
-   }
-}))
+app.use(cookieParser("This is secret"));
 
-app.use(passport.initialize());
-app.use(passport.session())
-
-
-// Login route - authenticates user and creates session
-app.post(
-  '/api/auth',
-  passport.authenticate('local'),
-  (req, res) => {
-    res.send({ msg: "Authenticated successfully", user: { username: req.user.username, age: req.user.age } });
-  }
+app.use(
+  session({
+    secret: "this is secret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 1000 * 60 * 60 },
+    store: MongoStore.create({
+      mongoUrl:
+        "mongodb+srv://janakumar9843_db_user:1234@cluster0.xspdewz.mongodb.net/?appName=Cluster0",
+    }),
+  })
 );
 
-app.use(userRouter)
-app.use(productRouter)
+app.use(passport.initialize());
+app.use(passport.session());
 
-// Test route - can remain public for testing
-app.get('/', (req, res) => {
-   res.cookie("user", "Admin", {maxAge: 60000 * 60, signed: true})
-   console.log('=== Session Info ===');
-   console.log('Session ID:', req.sessionID);
-   console.log('==================');
-   res.send("Hello");
-})
+// ---- Routes ----
+app.get("/", (req, res) => res.send("Hello"));
 
+app.post(
+  "/api/auth",
+  passport.authenticate("local"),
+  (req, res) => res.send({ msg: "Authenticated" })
+);
 
+app.get("/api/auth/status", (req, res) => {
+  if (!req.user) return res.sendStatus(401);
+  res.send({
+    authenticated: true,
+    user: {
+      id: req.user._id,
+      username: req.user.username,
+      provider: req.user.provider,
+    },
+  });
+});
 
-// Check authentication status
-app.get('/api/auth/status', (req, res) => {
-   console.log("Inside auth/status")
-   
-   if(req.user) {
-      return res.send({ 
-         authenticated: true, 
-         user: { 
-            username: req.user.username, 
-            age: req.user.age,
-            id: req.user._id 
-         } 
-      });
-   }
-   return res.sendStatus(401);
-})
+app.post("/api/auth/logout", (req, res) => {
+  if (!req.user) return res.sendStatus(401);
+  req.logout(() => res.send({ msg: "Logged out" }));
+});
 
-// Logout route
-app.post('/api/auth/logout', (req, res) => {
-   if(!req.user) return res.status(401).send({msg: "User doesn't logged in yet"});
-   
-   req.logout((err) => {
-      if(err) return res.sendStatus(500);
-      res.send({ msg: "Logged out successfully" });
-   })
-})
+// ---- OAuth ----
+app.get("/api/auth/google", passport.authenticate("google"));
 
-app.listen(PORT, () => { 
-    console.log(`Server is listening on http://localhost:${PORT}`)
-})
+app.get(
+  "/api/auth/google/redirect",
+  passport.authenticate("google", { failureRedirect: "/" }),
+  (req, res) => res.sendStatus(200)
+);
+
+app.get("/api/auth/discord", passport.authenticate("discord"));
+
+app.get(
+  "/api/auth/discord/redirect",
+  passport.authenticate("discord", { failureRedirect: "/" }),
+  (req, res) => res.sendStatus(200)
+);
+
+app.use(userRouter);
+app.use(productRouter);
+
+// ---- Start server ----
+app.listen(PORT, () => {
+  console.log(`Server running on  http://localhost:${PORT}`);
+});

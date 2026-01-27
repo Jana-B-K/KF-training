@@ -7,7 +7,7 @@ import { products } from '../utils/constants.js';
 const router = Router();
 
 // Apply authentication middleware to ALL product routes
-router.use(requireAuth);
+//router.use(requireAuth);
 
 // Get all products with optional filtering
 router.get('/api/products', checkSchema(productFilterValidationSchema), (req, res) => {
