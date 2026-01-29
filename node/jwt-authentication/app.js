@@ -1,3 +1,4 @@
+import 'dotenv/config'; 
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -5,82 +6,38 @@ import dotenv from 'dotenv';
 import { User } from './models/user.js';
 import jwt from 'jsonwebtoken'
 import cookieParser from 'cookie-parser'
+import router from './auth.js';
 const app = express();
 
-
-dotenv.config();
 app.use(express.json());
 app.use(cookieParser());
+app.use(router)
 
-
-const PORT = 5000;
+// ✅ Use environment variables
+const PORT = process.env.PORT || 5000;
+const MONGODB_URI = process.env.MONGODB_URI;
 
 app.get('/', (req,res) => {
-    res.send("<h1>Welcome to JWT Authentication<h1>");
+    res.send("<h1>Welcome to JWT Authentication</h1>");
 })
 
-app.post('/auth/register', async (req, res) => {
+function authMiddleware(req, res, next) {
     try{
-        const { name, email, password } = req.body;
-        const isEmailAllReadyExist = await User.findOne({ email: email});
-
-        if( isEmailAllReadyExist ) {
-            return res.status(400).send({ msg: "Email already exist"})
+        const token = req.headers.authorization?.split(' ')[1]; 
+        
+        if(!token){
+            return res.status(401).send({msg: "Token is not available"})  
         }
-        const newUser = await User.create({
-            name,
-            email,
-            password
-        })
-        return res.status(201).send({user: newUser});
-    }catch(err){
-        console.log(err);
-        res.status(400).send({msg: err.msg.toString() })
+        const decode = jwt.verify(token, "This is for learning"); 
+        req.user = decode;
+        console.log("User verified")
+        next();
+    
+    }catch(err) { 
+        res.status(401).send({msg: "Invalid token"}) 
     }
-})
+}
 
-app.post('/auth/login', async (req, res) => {
-    const { email, password } = req.body;
-    try{
-        const isUserExist = await User.findOne({email: email});
-        if(!isUserExist){
-            return res.status(400).send({msg: "User not found"});
-
-        }
-
-        const isPassswordMatch = isUserExist.password === password;
-
-        if(!isPassswordMatch){
-            return res.status(404).send({ msg: "User password doesnot match"})
-        }
-        console.log(isUserExist._id)
-        console.log(isUserExist.email)
-
-        const token = jwt.sign(
-            {_id: isUserExist._id, email: isUserExist.email},
-            "This is secret",
-            {
-                expiresIn: "360s"
-            }
-        )
-        console.log("token")
-        res.cookie('token', token, {
-            httpOnly: true,      // JS cannot access (XSS protection)
-            secure: false,       // true in HTTPS
-            sameSite: 'strict',  // CSRF protection
-            maxAge: 60 * 60 * 1000
-        });
-        return res.send(
-            {
-                msg: "Login success",
-                token: token
-            }
-        )
-    }catch(err){
-        res.status(500).send({ msg: "Internal server error" });
-
-    }
-})
 
 app.get('/profile', authMiddleware, (req, res) => {
     console.log(req.header.token)
@@ -90,31 +47,22 @@ app.get('/profile', authMiddleware, (req, res) => {
   });
 });
 
-function authMiddleware(req, res, next) {
-    try{
-        const token = req.cookies.token;
-        if(!token){
-            return res.send({msg: "Token is not avaialable"})
-        }
-        const decode = jwt.verify(token, "This is secret");
-        req.user = decode;
-        console.log("User verified")
-        next();
-    
-    }catch(err) { 
-        res.status(404).send({mes: "Invalid token"})
-    }
 
+
+async function startServer() {
+    try {
+        // Connect to database FIRST
+        await mongoose.connect(process.env.MONGODB_URI);
+        console.log("🛢️  Connected to Database");
+        
+        // THEN start server
+        app.listen(PORT, () => {
+            console.log(`🗄️  Server running on http://localhost:${PORT}`);
+        });
+    } catch (error) {
+        console.error("⚠️ Failed to start:", error);
+        process.exit(1);
+    }
 }
 
-app.listen(PORT, async () => {
-    console.log(`🗄️  Server Fire on http://localhost:${PORT}`);
-      try {
-        await mongoose.connect(
-        "mongodb+srv://janakumar9843_db_user:1234@cluster0.xspdewz.mongodb.net/?appName=Cluster0"
-        );
-        console.log("🛢️  Connected To Database");
-    } catch (error) {
-        console.log("⚠️ Error to connect Database");
-    }
-}) 
+startServer();
