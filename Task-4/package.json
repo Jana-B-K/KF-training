@@ -1,0 +1,22 @@
+{
+  "name": "controllers",
+  "version": "1.0.0",
+  "description": "",
+  "main": "user.controller.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "express-validator": "^7.3.1",
+    "mongo-db": "^1.0.2",
+    "mongoose": "^9.1.5",
+    "nodemon": "^3.1.11",
+    "router": "^2.2.0"
+  }
+}
