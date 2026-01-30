@@ -1,8 +1,17 @@
+
 export const errorHandler = (err, req, res, next) => {
-  console.error(err);
+
+  // 🔴 Simple error logging
+  console.error('ERROR:', {
+    message: err.message,
+    method: req.method,
+    url: req.originalUrl,
+    stack: err.stack
+  });
 
   const statusCode = err.statusCode || 500;
-  const message = err.message || 'Internal Server Error';
 
-  res.status(statusCode).json({ message });
+  res.status(statusCode).json({
+    message: err.message || 'Internal Server Error'
+  });
 };
