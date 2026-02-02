@@ -1,13 +1,15 @@
+import { useReducer, useContext } from "react";
+
+function reducerFunction(state, action) {
+
+}
 const Form = () => {
+    const [state, dispatch] = useReducer(reducerFunction,null)
     return (
-        <>
-            <form className="form" >
-                <input type="text" placeholder="Enter your email"/>
-                <input type="password" />
-                <button type="submit">Login in</button>
-            </form>
-        </>
+        <form className="form" onSubmit={handleSubmit} >
+            <input type="text" name="username" value={username} />
+            <input type="password" name="password" value={password} />
+            <button>submit</button>
+        </form>
     )
 }
-
-export default Form;
