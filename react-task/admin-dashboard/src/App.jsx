@@ -1,16 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useContext, useEffect } from 'react';  // ✅ ADDED useEffect import
+import { AuthProvider, AuthContext } from './context/AuthContext';
+import Form from './components/Form';
+import Dashboard from './components/Dashboard';
+import './index.css';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+function AppContent() {
+  const { state } = useContext(AuthContext);
+  
+  // Apply theme to body
+  useEffect(() => {
+    document.body.className = state.theme;
+  }, [state.theme]);
+  
   return (
-    <>
-      
-    </>
-  )
+    <div className={`app ${state.theme}`}>
+      {state.isAuthenticated ? <Dashboard /> : <Form />}
+    </div>
+  );
 }
 
-export default App
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
+  );
+}
+
+export default App;
