@@ -1,57 +1,50 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import Form from "./components/Form";
-import Card from "./components/Cards";
-
-const API = "http://localhost:2000/api/user";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Login from "./pages/Login.jsx";
+import Signup from "./pages/Signup.jsx";
+import Users from "./pages/Users.jsx";
+import ProtectedRoute from "./routes/ProtectedRoutes.jsx";
+import './index.css'
 
 function App() {
-  const [users, setUsers] = useState([]);
-  const [editingUser, setEditingUser] = useState(null);
-
-  // READ
-  const fetchUsers = async () => {
-    try {
-      const res = await axios.get(API);
-      setUsers(res.data.users);
-    } catch (err) {
-      console.error("Fetch failed", err);
-    }
-  };
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  // DELETE
-  const deleteUser = async (id) => {
-    try {
-      await axios.delete(`${API}/${id}`);
-      fetchUsers();
-    } catch (err) {
-      console.error("Delete failed", err);
-    }
-  };
-
   return (
-    <>
-      <Form
-        onSuccess={fetchUsers}
-        editingUser={editingUser}
-        clearEdit={() => setEditingUser(null)}
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+
+      {/* 
+        ✅ Removed roles={["ADMIN","USER"]} — it was causing the redirect
+           when user.role was undefined/missing from the login response.
+           ProtectedRoute alone already blocks unauthenticated users.
+           Add roles back ONLY if you want to restrict specific pages to ADMIN only.
+      */}
+      <Route
+        path="/users"
+        element={
+          <ProtectedRoute>
+            <Users />
+          </ProtectedRoute>
+        }
       />
 
-      <div className="cards-wrapper">
-        {users.map((user) => (
-          <Card
-            key={user._id}
-            user={user}
-            onDelete={deleteUser}
-            onEdit={setEditingUser}
-          />
-        ))}
-      </div>
-    </>
+      {/* ✅ Added /unauthorized — was missing, so it fell to the 404 wildcard */}
+      <Route
+        path="/unauthorized"
+        element={
+          <div style={{ textAlign: "center", marginTop: 120 }}>
+            <h2>Access Denied</h2>
+            <p style={{ color: "#64748b", marginTop: 8 }}>
+              You don't have permission to view this page.
+            </p>
+            <a href="/login" style={{ color: "#2563eb", marginTop: 16, display: "inline-block" }}>
+              Go back to Login
+            </a>
+          </div>
+        }
+      />
+
+      <Route path="/" element={<Navigate to="/login" />} />
+      <Route path="*" element={<h2>404 — Page not found</h2>} />
+    </Routes>
   );
 }
 
