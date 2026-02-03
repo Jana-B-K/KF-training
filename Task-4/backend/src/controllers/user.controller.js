@@ -32,12 +32,14 @@ export const getUserById = async (req, res, next) => {
 
 export const updateUser = async (req, res, next) => {
   const id = req.params.id;
+  // Use req.body if matchedData isn't picking up fields correctly, 
+  // but matchedData is better if validation is set up.
   const data = matchedData(req);
 
   try {
     const user = await userServices.updateUser(id, data);
     res.status(200).json({
-      user,
+      user, // This must be the updated user object
       msg: 'User updated'
     });
   } catch (err) {
