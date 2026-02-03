@@ -41,12 +41,16 @@ export const loginUser = async (req, res, next) => {
             sameSite: 'strict',  // CSRF protection
             maxAge: 60 * 60 * 1000
         })
-        res.status(200).send(
-            {
-                msg: "user login success",
-                Token: accessToken
-            }
-        )
+        res.status(200).send({
+            user: {
+                _id: user._id,
+                username: user.username,
+                email: user.email,
+                role: user.role
+            },
+            token: accessToken
+        });
+
     }catch(err){
         next(err);
     }
