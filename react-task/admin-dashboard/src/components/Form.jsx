@@ -1,43 +1,26 @@
 import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
+// Assuming these helper files exist as per your original code
 import validateForm from "../services/validation";
+import authenticateUser from "../middleware/authenticate";
 
 const Form = () => {
   const { dispatch, state } = useContext(AuthContext);
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-  });
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
 
   useEffect(() => {
-    setError(state.error || "");
+    if (state.error) setError(state.error);
   }, [state.error]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    if (error) setError(""); 
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setError("");
-    
     try {
       validateForm(formData);
-      dispatch({
-        type: "LOGIN_SUCCESS",
-        payload: formData,
-      });
+      const res = authenticateUser(formData);
+      dispatch({ type: "LOGIN_SUCCESS", payload: res });
     } catch (err) {
-      dispatch({
-        type: "LOGIN_ERROR",
-        payload: err.message,
-      });
+      dispatch({ type: "LOGIN_ERROR", payload: err.message });
     }
   };
 
@@ -47,28 +30,14 @@ const Form = () => {
         <h2>Login</h2>
         {error && <div className="error-message">{error}</div>}
         <div className="input-group">
-          <input
-            type="email"
-            name="username"
-            placeholder="Email"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
+          <input type="email" placeholder="Email" required
+            onChange={(e) => setFormData({...formData, email: e.target.value})} />
         </div>
         <div className="input-group">
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
+          <input type="password" placeholder="Password" required
+            onChange={(e) => setFormData({...formData, password: e.target.value})} />
         </div>
-        <button type="submit" className="submit-btn">
-          Login
-        </button>
+        <button type="submit" className="submit-btn">Login</button>
       </form>
     </div>
   );
