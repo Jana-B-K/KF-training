@@ -30,8 +30,6 @@ userRouter.post(
 
 userRouter.put(
     '/user/:id',
-    checkSchema(createValidationSchema),
-    validate,
     userController.updateUser
 );
 
