@@ -32,16 +32,13 @@ export const getUserById = async (req, res, next) => {
 
 export const updateUser = async (req, res, next) => {
   const id = req.params.id;
-  // Use req.body if matchedData isn't picking up fields correctly, 
-  // but matchedData is better if validation is set up.
-  const data = matchedData(req);
+  // If matchedData is failing, it means your validation middleware 
+  // doesn't "match" the fields you're sending (like role or missing password)
+  const data = req.body; 
 
   try {
     const user = await userServices.updateUser(id, data);
-    res.status(200).json({
-      user, // This must be the updated user object
-      msg: 'User updated'
-    });
+    res.status(200).json({ user, msg: 'User updated' });
   } catch (err) {
     next(err);
   }
