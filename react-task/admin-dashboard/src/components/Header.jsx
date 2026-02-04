@@ -1,58 +1,53 @@
-import { useContext, useState, useRef, useEffect } from "react";  // ✅ ADDED useEffect
+import { useContext, useState, useRef, useEffect } from "react"; 
 import { AuthContext } from "../context/AuthContext";
+import { Link, useNavigate } from "react-router-dom";
 
-export default function Header() {
+export default function Header({ onMenuToggle }) {
   const { state, dispatch } = useContext(AuthContext);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
 
-  const handleLogout = () => {
-    dispatch({ type: "LOGOUT" });
-    setDropdownOpen(false);
-  };
-
-  const toggleTheme = () => {
-    dispatch({ type: "TOGGLE_THEME" });
-  };
-
-  // Close dropdown when clicking outside
   useEffect(() => {  
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setDropdownOpen(false);
       }
-    }
+    };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Safety check: if state isn't ready, show a small loader instead of a blank screen
+  if (!state) return <div className="header">Loading...</div>;
+
   return (
     <header className="header">
       <div className="header-left">
-        <h1 className="logo" onClick={() => window.location.reload()}>
-          Logo
-        </h1>
+        {/* The Hamburger Button */}
+        <button className="menu-toggle" onClick={onMenuToggle}>
+          ☰
+        </button>
+        <h1 className="logo" onClick={() => navigate("/")}>MyBrand</h1>
       </div>
+    
       
       <div className="header-right">
-        <button className="theme-toggle" onClick={toggleTheme} title="Toggle Theme">
+        <button className="theme-toggle" onClick={() => dispatch({ type: "TOGGLE_THEME" })}>
           {state.theme === "light" ? "🌙" : "☀️"}
         </button>
         
         <div className="profile-container" ref={dropdownRef}>
-          <button 
-            className="profile-btn"
-            onClick={() => setDropdownOpen(!dropdownOpen)}
-          >
-            👤 {state.user?.username?.split('@')[0]}
+          <button className="profile-btn" onClick={() => setDropdownOpen(!dropdownOpen)}>
+            👤 {state.user?.name || "User"}
           </button>
           
           {dropdownOpen && (
-            <div className="dropdown">
-              <button className="dropdown-item" onClick={() => alert('Profile Page')}>
-                Profile
-              </button>
-              <button className="dropdown-item logout" onClick={handleLogout}>
+            <div className="dropdown fade-in">
+              <Link to="/profile" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
+                User Profile
+              </Link>
+              <button className="dropdown-item logout" onClick={() => dispatch({ type: "LOGOUT" })}>
                 Logout
               </button>
             </div>
