@@ -6,18 +6,18 @@ function UserForm({ initialData = {}, onSubmit, isEdit }) {
   const [form, setForm] = useState({ ...EMPTY });
 
   // Sync form state when initialData changes (important for switching between edits)
-  useEffect(() => {
-    if (isEdit && initialData) {
+useEffect(() => {
+    if (isEdit && initialData?._id) {
       setForm({
         username: initialData.username || "",
         email: initialData.email || "",
-        password: "", // Keep password empty on edit
+        password: "", 
         role: initialData.role || "USER",
       });
-    } else {
+    } else if (!isEdit) {
       setForm({ ...EMPTY });
     }
-  }, [initialData, isEdit]);
+  }, [initialData?._id, isEdit]); // 👈 Use ID, not the whole object
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -27,7 +27,7 @@ function UserForm({ initialData = {}, onSubmit, isEdit }) {
     e.preventDefault();
     const payload = { ...form };
     
-    // Remove password from payload if editing to prevent overwriting with empty string
+    // Remove password from payload   if editing to prevent overwriting with empty string
     if (isEdit) {
       delete payload.password;
     }
