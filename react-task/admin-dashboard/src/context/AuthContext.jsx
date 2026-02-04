@@ -13,13 +13,13 @@ function getInitialState() {
         user: parsed.user,
         isAuthenticated: true,
         error: null,
-        theme: themeStored === "dark" ? "dark" : "light", 
+        theme: themeStored || "light",
       };
     }
   } catch (e) {
     console.warn("Could not parse auth from localStorage");
   }
-  return { ...initialState, theme: "light" }; 
+  return initialState;
 }
 
 export function AuthProvider({ children }) {
@@ -31,13 +31,8 @@ export function AuthProvider({ children }) {
         user: state.user,
         isAuthenticated: true 
       }));
-    } else if (!state.isAuthenticated) {
-      localStorage.removeItem("auth");
     }
-    
-    // Always save theme
-    localStorage.setItem("theme", state.theme);
-  }, [state.isAuthenticated, state.user, state.theme]);
+  }, [state.isAuthenticated, state.user]);
 
   return (
     <AuthContext.Provider value={{ state, dispatch }}>
