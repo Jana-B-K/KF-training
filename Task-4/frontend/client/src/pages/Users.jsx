@@ -43,7 +43,9 @@ function Users() {
   async function updateUser(data) {
     try {
       setError("");
+      console.log("Sending payload:", data); 
       const res = await api.updateUser(editingUser._id, data, state.token);
+      console.log("Server response:", res.data)
       
       // Based on your controller: res.status(200).json({ user, msg: 'User updated' });
       const updatedUser = res.data.user;
@@ -84,22 +86,27 @@ function Users() {
       {!isAdmin && <p className="readonly-msg">You have read-only access.</p>}
 
       {isAdmin && (
-        editingUser ? (
-          <div>
-            <UserForm
-              key={editingUser._id}
-              initialData={editingUser}
-              onSubmit={updateUser}
-              isEdit={true}
-            />
-            <button className="cancel-edit" onClick={() => setEditingUser(null)}>
-              ✕ Cancel Edit
+      editingUser ? (
+        <div className="edit-form-container">
+          <div className="edit-header">
+            <span className="edit-badge">Editing Mode</span>
+            <button className="cancel-edit-btn" onClick={() => setEditingUser(null)} title="Cancel">
+              ✕
             </button>
           </div>
-        ) : (
+          <UserForm
+            key={editingUser._id}
+            initialData={editingUser}
+            onSubmit={updateUser}
+            isEdit={true}
+          />
+        </div>
+      ) : (
+        <div className="create-form-container">
           <UserForm onSubmit={addUser} isEdit={false} />
-        )
-      )}
+        </div>
+      )
+    )}
 
       {error && <p className="error">{error}</p>}
 
