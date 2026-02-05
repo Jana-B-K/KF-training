@@ -1,0 +1,125 @@
+/* --- 1. Theme Variables --- */
+
+/* Default / Light Theme */
+.light {
+    --bg-page: #f4f7f6;
+    --bg-card: #ffffff;
+    --text-main: #1a202c;
+    --text-muted: #718096;
+    --border-color: #edf2f7;
+    --btn-bg: #edf2f7;
+    --btn-text: #4a5568;
+    --shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+/* Dark Theme */
+.dark {
+    --bg-page: #121212;
+    --bg-card: #1e1e1e;
+    --text-main: #f7fafc;
+    --text-muted: #a0aec0;
+    --border-color: #2d3748;
+    --btn-bg: #2d3748;
+    --btn-text: #e2e8f0;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* --- 2. Layout Styles (Shared) --- */
+
+.view-profile-page {
+    background-color: var(--bg-page);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.profile-card {
+    background-color: var(--bg-card);
+    width: 100%;
+    max-width: 450px;
+    padding: 2.5rem;
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 1.5rem;
+    background: linear-gradient(135deg, #3182ce, #2c5282);
+    color: white;
+    font-size: 2.5rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);
+}
+
+.profile-card h2 {
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
+    font-size: 1.6rem;
+}
+
+.profile-role-badge {
+    display: inline-block;
+    padding: 0.3rem 1rem;
+    background: rgba(49, 130, 206, 0.1);
+    color: #4299e1;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Info Section */
+.profile-info-group {
+    text-align: left;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1.5rem;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.2rem;
+    font-size: 0.95rem;
+}
+
+.info-row strong {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.info-row span {
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+/* Back Button */
+.back-btn {
+    width: 100%;
+    margin-top: 1.5rem;
+    padding: 0.8rem;
+    background-color: var(--btn-bg);
+    color: var(--btn-text);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
