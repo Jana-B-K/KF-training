@@ -6,6 +6,7 @@ import Profile from './components/Profile';
 import Dashboard from './components/Dashboard';
 import Users from './components/Users';
 import Reports from './components/Report';
+import ViewProfile from './components/ViewProfile';
 import './index.css';
 
 // This component uses useContext, so it MUST be a child of AuthProvider
@@ -26,7 +27,8 @@ function AppRoutes() {
         <Route path="/profile" element={state.isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
         <Route path="/users" element={state.isAuthenticated ? <Users /> : <Navigate to="/login" />} />
         <Route path="/report" element={state.isAuthenticated ? <Reports /> : <Navigate to="/login" />} />
-        
+        <Route path="/viewProfile/:id" element={state.isAuthenticated ? <ViewProfile /> : <Navigate to="/login" />} /> 
+
         <Route path="*" element={<Navigate to={state.isAuthenticated ? "/" : "/login"} />} />
       </Routes>
     </div>
